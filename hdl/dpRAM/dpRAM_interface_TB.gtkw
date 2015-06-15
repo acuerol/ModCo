@@ -1,0 +1,46 @@
+[*]
+[*] GTKWave Analyzer v3.3.58 (w)1999-2014 BSI
+[*] Sun Jun 14 23:01:02 2015
+[*]
+[dumpfile] "/home/acuerol/Dropbox/universidad/classes/EDI/j1_soc_edit/hdl/dpRAM/simulation/dpRAM_interface_TB.vcd"
+[dumpfile_mtime] "Sun Jun 14 23:00:25 2015"
+[dumpfile_size] 237293
+[savefile] "/home/acuerol/Dropbox/universidad/classes/EDI/j1_soc_edit/hdl/dpRAM/dpRAM_interface_TB.gtkw"
+[timestart] 0
+[size] 1366 718
+[pos] -181 -59
+*-18.350603 354000 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[treeopen] dpRAM_interface_TB.
+[treeopen] dpRAM_interface_TB.dpRAM.
+[sst_width] 196
+[signals_width] 185
+[sst_expanded] 1
+[sst_vpaned_height] 191
+@28
+dpRAM_interface_TB.clk
+@24
+dpRAM_interface_TB.i[20:0]
+@200
+-
+@28
+dpRAM_interface_TB.cs
+@29
+dpRAM_interface_TB.wr
+@28
+dpRAM_interface_TB.rd
+@200
+-
+@22
+dpRAM_interface_TB.dpRAM.addr[7:0]
+@200
+-
+@22
+dpRAM_interface_TB.d_in[15:0]
+dpRAM_interface_TB.dpRAM.dlptRAM.d_in_1[15:0]
+@200
+-
+@22
+dpRAM_interface_TB.d_out[15:0]
+dpRAM_interface_TB.dpRAM.dlptRAM.d_out_1[15:0]
+[pattern_trace] 1
+[pattern_trace] 0

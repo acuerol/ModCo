@@ -1,0 +1,72 @@
+[*]
+[*] GTKWave Analyzer v3.3.58 (w)1999-2014 BSI
+[*] Sun Jun 14 14:41:37 2015
+[*]
+[dumpfile] "/home/acuerol/Dropbox/universidad/classes/EDI/j1_soc_edit/hdl/uart/simulation/peripheral_uart_TB.vcd"
+[dumpfile_mtime] "Sun Jun 14 14:37:12 2015"
+[dumpfile_size] 860777
+[savefile] "/home/acuerol/Dropbox/universidad/classes/EDI/j1_soc_edit/hdl/uart/peripheral_uart_TB.gtkw"
+[timestart] 0
+[size] 1366 718
+[pos] 1185 -59
+*-24.000000 670000 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[treeopen] peripheral_uart_TB.
+[treeopen] peripheral_uart_TB.p_uart.
+[sst_width] 196
+[signals_width] 179
+[sst_expanded] 1
+[sst_vpaned_height] 244
+@28
+peripheral_uart_TB.clk
+peripheral_uart_TB.rst
+@200
+-
+@28
+peripheral_uart_TB.addr[3:0]
+peripheral_uart_TB.cs
+peripheral_uart_TB.wr
+peripheral_uart_TB.rd
+@200
+-
+@28
+peripheral_uart_TB.p_uart.uart.ser_clk
+@200
+-
+@28
+peripheral_uart_TB.p_uart.uart.uart_busy
+peripheral_uart_TB.p_uart.uart.sending
+peripheral_uart_TB.p_uart.uart.bitcount[3:0]
+@200
+-
+@c00024
+peripheral_uart_TB.d_in[15:0]
+@28
+(0)peripheral_uart_TB.d_in[15:0]
+(1)peripheral_uart_TB.d_in[15:0]
+(2)peripheral_uart_TB.d_in[15:0]
+(3)peripheral_uart_TB.d_in[15:0]
+(4)peripheral_uart_TB.d_in[15:0]
+(5)peripheral_uart_TB.d_in[15:0]
+(6)peripheral_uart_TB.d_in[15:0]
+(7)peripheral_uart_TB.d_in[15:0]
+(8)peripheral_uart_TB.d_in[15:0]
+(9)peripheral_uart_TB.d_in[15:0]
+(10)peripheral_uart_TB.d_in[15:0]
+(11)peripheral_uart_TB.d_in[15:0]
+(12)peripheral_uart_TB.d_in[15:0]
+(13)peripheral_uart_TB.d_in[15:0]
+(14)peripheral_uart_TB.d_in[15:0]
+(15)peripheral_uart_TB.d_in[15:0]
+@1401200
+-group_end
+@24
+peripheral_uart_TB.p_uart.d_in_uart[7:0]
+@200
+-
+@28
+peripheral_uart_TB.uart_tx
+peripheral_uart_TB.p_uart.uart.shifter[8:0]
+@29
+peripheral_uart_TB.ledout
+[pattern_trace] 1
+[pattern_trace] 0

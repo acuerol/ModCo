@@ -1,0 +1,12 @@
+NET "sys_clk_i" LOC = B8;
+NET "sys_clk_i" IOSTANDARD = LVCMOS33;
+
+NET "sys_rst_i" LOC = G18;
+NET "sys_rst_i" IOSTANDARD = LVCMOS33;
+
+NET "ledout" LOC = J14;
+NET "ledout" IOSTANDARD = LVCMOS33;
+
+NET "uart_tx" LOC = K12;
+NET "uart_tx" IOSTANDARD = LVCMOS33;
+
