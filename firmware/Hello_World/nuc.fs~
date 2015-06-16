@@ -411,7 +411,7 @@ create pad 84 allot create pad|
 ;
 
 : emit-uart	\ hecho por el profe
-    begin uart_busy @ 0= until
+    begin uart_busy @ 0= uart_done @ d# 1 = and until
     uart_data !
 ;
 
@@ -423,6 +423,10 @@ create pad 84 allot create pad|
     drop
 ;
 
+: listen-uart
+	begin uart_busy @ 0= uart_done @ d# 0 = and until
+	uart_rx @
+;
 
 defer emit
 ' emit-uart is emit

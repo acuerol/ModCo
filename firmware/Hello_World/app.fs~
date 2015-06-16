@@ -101,21 +101,19 @@ h# 700A @ \ lee lo que hay en el registro h# 700A, queda almacenado en la pila
 ;
 
 : main 
+
+	h# c4 h# 7002 !
 	
-	h# 2 h# 7000 !
-	h# 7000 @ emit-uart
-	
-	h# f1 h# 7001 !
-	h# 7001 @ emit-uart
-	
-	h# f2 h# 7002 !
 	h# 7002 @ emit-uart
 	
-	h# f3 h# 7003 !
-	h# 7003 @ emit-uart
+	d# 4 emit-uart
 	
-	h# f4 h# 7004 !
-	h# 7004 @ emit-uart
+	d# 4 emit-uart
+	
+	listen-uart emit-uart
+	
+	
+	d# 15 emit-uart
 	
 	d# 15 emit-uart
 	

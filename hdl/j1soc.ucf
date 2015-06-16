@@ -10,3 +10,5 @@ NET "ledout" IOSTANDARD = LVCMOS33;
 NET "uart_tx" LOC = K12;
 NET "uart_tx" IOSTANDARD = LVCMOS33;
 
+NET "uart_rx" LOC = L17;
+NET "uart_rx" IOSTANDARD = LVCMOS33;

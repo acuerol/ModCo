@@ -1,3 +1,0 @@
-
-NET "clk" LOC = B8;
-NET "clk" IOSTANDARD = LVCMOS33;

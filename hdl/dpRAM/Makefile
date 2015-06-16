@@ -12,7 +12,7 @@ IVERILOG        = iverilog
 
 SAKC_IP         = 192.168.254.101
 
-SRC             = $(DESIGN).v core_peripheric.v dualport_RAM.v
+SRC             = $(DESIGN).v dualport_RAM.v
 SIM_SRC = $(DESIGN)_TB.v          \
 
  

@@ -2,7 +2,7 @@ module j1soc#(
               //parameter   bootram_file     = "../../firmware/hello_world/j1.mem"    // For synthesis            
               parameter   bootram_file     = "../firmware/Hello_World/j1.mem"       // For simulation         
   )(
-   uart_tx, ledout,
+   uart_tx, uart_rx, ledout,
    sys_clk_i, sys_rst_i
    );
 
@@ -10,6 +10,8 @@ module j1soc#(
    output uart_tx;
    output ledout;
 
+
+	input uart_rx;
 
 //------------------------------------ regs and wires-------------------------------
    wire                 j1_io_rd;//********************** J1
@@ -33,7 +35,7 @@ module j1soc#(
 
   peripheral_div  per_d (.clk(sys_clk_i), .rst(sys_rst_i), .d_in(j1_io_dout), .cs(cs[2]), .addr(j1_io_addr[3:0]), .rd(j1_io_rd), .wr(j1_io_wr), .d_out(div_dout));
 
-  peripheral_uart  per_u (.clk(sys_clk_i), .rst(sys_rst_i), .d_in(j1_io_dout), .cs(cs[3]), .addr(j1_io_addr[3:0]), .rd(j1_io_rd), .wr(j1_io_wr), .d_out(uart_dout), .uart_tx(uart_tx), .ledout(ledout));
+  peripheral_uart  per_u (.clk(sys_clk_i), .rst(sys_rst_i), .d_in(j1_io_dout), .cs(cs[3]), .addr(j1_io_addr[3:0]), .rd(j1_io_rd), .wr(j1_io_wr), .d_out(uart_dout), .uart_tx(uart_tx), .uart_rx(uart_rx) , .ledout(ledout));
 
 
   dpRAM_interface dpRm(.clk(sys_clk_i), .d_in(j1_io_dout), .cs(cs[4]), .addr(j1_io_addr[7:0]), .rd(j1_io_rd), .wr(j1_io_wr), .d_out(dp_ram_dout));
