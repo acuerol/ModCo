@@ -38,7 +38,7 @@ module j1soc#(
   peripheral_uart  per_u (.clk(sys_clk_i), .rst(sys_rst_i), .d_in(j1_io_dout), .cs(cs[3]), .addr(j1_io_addr[3:0]), .rd(j1_io_rd), .wr(j1_io_wr), .d_out(uart_dout), .uart_tx(uart_tx), .uart_rx(uart_rx) , .ledout(ledout));
 
 
-  dpRAM_interface dpRm(.clk(sys_clk_i), .d_in(j1_io_dout), .cs(cs[4]), .addr(j1_io_addr[7:0]), .rd(j1_io_rd), .wr(j1_io_wr), .d_out(dp_ram_dout));
+  dpRAM_interface dpRm(.clk(sys_clk_i), .addr(j1_io_addr[3:0]), .dat_in(j1_io_dout), .dat_out(dp_ram_dout), .cs(cs[4]), .rd(j1_io_rd), .wr(j1_io_wr));
 
 
   // ============== Chip_Select (Addres decoder) ========================  // se hace con los 8 bits mas significativos de j1_io_addr

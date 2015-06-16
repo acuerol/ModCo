@@ -33,5 +33,11 @@ h# 6902 constant uart_rx
 h# 6904 constant uart_done
 h# 6906 constant uart_data    \ escritura de datos que van a la uart
 h# 6908 constant led     \ led-independiente , se lo deja dentro del mapa de memoria de la uart
-h# 690A constant last_rx_data
+
+h# 7000 constant dpRAM_write
+h# 7002 constant dpRAM_read
+h# 7004 constant dpRAM_set_addr
+h# 7008 constant dpRAM_init
+
+
 

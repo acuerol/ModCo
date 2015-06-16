@@ -5,29 +5,37 @@
 module dpRAM_interface_TB;
 
 	reg clk;
-	reg [15:0]d_in;
+
 	reg cs;
-	reg [7:0]addr; // 8 LSB from j1_io_addr
 	reg rd;
 	reg wr;
-	wire [15:0]d_out;
-	
+
+	reg [3:0]addr;
+	reg [7:0]dp_mem_addr;
+
+	wire [15:0]dat_out;
+	reg [15:0]dat_in;
+			
 	parameter PERIOD = 20;
 	parameter real DUTY_CYCLE = 0.5;
 	parameter OFFSET = 0;
 	
 	reg [20:0] i;
 	event reset_trigger;
-		
-	dpRAM_interface dpRAM(.clk(clk), .addr(addr), .d_in(d_in), .d_out(d_out), .cs(cs), .wr(wr), .rd(rd));
+
+	dpRAM_interface dpRAM(.clk(clk), .addr(addr), .dp_mem_addr(dp_mem_addr), .dat_in(dat_in), .dat_out(dat_out), .cs(cs), .wr(wr), .rd(rd));
 	
 	initial begin// Initialize Inputs
 		clk = 1;
-		addr = 0;
+		
 		cs = 0;
 		wr = 0;
 		rd = 0;
-		d_in = 0;
+		
+		addr = 0;
+		dp_mem_addr = 0;
+		
+		dat_in = 0;
 	end
 
 	initial begin// Process for sys_clk_i
@@ -43,36 +51,98 @@ module dpRAM_interface_TB;
 		for(i = 0; i < 10000; i = i+1) begin
 			@ (posedge clk);
 			
+			//-------------------Escribe
 			if(i == 20) begin
-				addr = 8'h70;
+				addr = 4'h0;
 				cs = 1;
 				wr = 1;
 				rd = 0;
-				d_in = 4'hC;
-			end
-			
-			if(i == 25) begin
-				addr = 8'h70;
-				cs = 1;
-				wr = 0;
-				rd = 1;
-				d_in = 4'h0;
+				dat_in = 16'hB;
 			end
 			
 			if(i == 30) begin
-				addr = 8'h70;
+				addr = 4'h4;
 				cs = 1;
 				wr = 1;
 				rd = 0;
-				d_in = 4'hB;
+				dp_mem_addr = 8'h80;
 			end
 			
-			if(i == 35) begin
-				addr = 8'h70;
+			if(i == 40) begin
+				addr = 4'h8;
+				cs = 1;
+				wr = 1;
+				rd = 0;
+			end
+
+			//-------------------Escribe
+			if(i == 50) begin
+				addr = 4'h0;
+				cs = 1;
+				wr = 1;
+				rd = 0;
+				dat_in = 16'hFF;
+			end
+			
+			if(i == 60) begin
+				addr = 4'h4;
+				cs = 1;
+				wr = 1;
+				rd = 0;
+				dp_mem_addr = 8'h55;
+			end
+			
+			if(i == 70) begin
+				addr = 4'h8;
+				cs = 1;
+				wr = 1;
+				rd = 0;
+			end
+			
+			//-------------------Lee
+			if(i == 90) begin
+				addr = 4'h4;
+				cs = 1;
+				wr = 1;
+				rd = 0;
+				dp_mem_addr = 8'h55;
+			end
+			
+			if(i == 100) begin
+				addr = 4'h8;
+				cs = 1;
+				wr = 1;
+				rd = 0;
+			end
+			
+			if(i == 110) begin
+				addr = 4'h2;
 				cs = 1;
 				wr = 0;
 				rd = 1;
-				d_in = 4'h0;
+			end
+			
+			//-------------------------Lee
+			if(i == 120) begin
+				addr = 4'h4;
+				cs = 1;
+				wr = 1;
+				rd = 0;
+				dp_mem_addr = 4'h80;
+			end
+			
+			if(i == 130) begin
+				addr = 4'h8;
+				cs = 1;
+				wr = 1;
+				rd = 0;
+			end
+			
+			if(i == 150) begin
+				addr = 4'h0;
+				cs = 1;
+				wr = 0;
+				rd = 1;
 			end
 			
 		end

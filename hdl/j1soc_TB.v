@@ -34,49 +34,8 @@ initial begin
 			@ (posedge sys_clk_i);
 			//--------------------RX 10101110 -170
 			
-			if(i == 11150+fac) begin
-				 // inicio de recepción
-			end
 			
-			if(i == 11520+fac) begin
-				uart_rx = 0; // inicio de recepción
-			end
 			
-			if(i == 11954+fac) begin
-				uart_rx = 1;
-			end
-			
-			if(i == 12388+fac) begin
-				uart_rx = 0;
-			end
-			
-			if(i == 12822+fac) begin
-				uart_rx = 1;
-			end
-			
-			if(i == 13256+fac) begin
-				uart_rx = 0;
-			end
-			
-			if(i == 13690+fac) begin
-				uart_rx = 1;
-			end
-			
-			if(i == 14124+fac) begin
-				uart_rx = 1;
-			end
-			
-			if(i == 14558+fac) begin
-				uart_rx = 1;
-			end
-			
-			if(i == 14992+fac) begin
-				uart_rx = 0;
-			end
-			// end
-			if(i == 15426+fac) begin
-				uart_rx = 1;
-			end
 			//--------------------RX  10101110-170
 		end
 end

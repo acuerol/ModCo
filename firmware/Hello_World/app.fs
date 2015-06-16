@@ -102,22 +102,22 @@ h# 700A @ \ lee lo que hay en el registro h# 700A, queda almacenado en la pila
 
 : main 
 
-	h# c4 h# 7002 !
+	h# F1 h# AA save
+	h# F9 h# B2 save
+	h# B3 h# C1 save
+	h# F4 h# D4 save
+	h# E5 h# FF save
+	h# F6 h# 5A save
 	
-	h# 7002 @ emit-uart
-	
-	d# 4 emit-uart
-	
-	d# 4 emit-uart
-	
-	listen-uart emit-uart
-	
-	
-	d# 15 emit-uart
-	
-	d# 15 emit-uart
+	h# AA load emit-uart
+	h# B2 load emit-uart
+	h# C1 load emit-uart
+	h# D4 load emit-uart
+	h# FF load emit-uart
+	h# 5A load emit-uart
 	
 	d# 0 begin
+	(
 		h# 0A @ h# c9 = if
 			s" HOLA" type-uart 
 		else
@@ -125,6 +125,7 @@ h# 700A @ \ lee lo que hay en el registro h# 700A, queda almacenado en la pila
 		then	
 	
 		d# 0 h# A000 !
+	)
 	1+ again
 	
 	d# 25 emit-uart

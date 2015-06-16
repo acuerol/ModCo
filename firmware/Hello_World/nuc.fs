@@ -410,6 +410,20 @@ create pad 84 allot create pad|
     [ 4294967296. 115200 WB_CLOCK_FREQ m*/ drop h# ffffff00 and dup swap 16 rshift ] 2literal
 ;
 
+( 16bits 8bits )
+: save ( data addr -- )
+	swap dpRAM_write !
+	dpRAM_set_addr !
+	d# 1 dpRAM_init !
+;
+
+( 8bits )
+: load ( addr -- )
+	dpRAM_set_addr !
+	dpRAM_init @
+	dpRAM_read @
+;
+
 : emit-uart	\ hecho por el profe
     begin uart_busy @ 0= uart_done @ d# 0 = and until
     uart_data !
