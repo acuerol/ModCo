@@ -100,25 +100,19 @@ h# 700A @ \ lee lo que hay en el registro h# 700A, queda almacenado en la pila
 	h# C emit-uart
 ;
 
-: main 
-
-	h# F1 h# AA save
-	h# F9 h# B2 save
+: main 	
 	
-	h# AA load emit-uart
-	h# B2 load emit-uart
-	
+	(
 	listen-uart h# AA save
 	h# AA load emit-uart
+	)
 	
-	h# F1 h# AA save
-	h# F9 h# B2 save
-	
-	h# AA load emit-uart
-	h# B2 load emit-uart
+	s" AT+CWMODE?" type-uart
+	h# 0d emit-uart h# 0a emit-uart
+	listen-uart emit-uart
 	
 	d# 0 begin
-
+		
 	1+ again
 	
 \ usar_dpRAM

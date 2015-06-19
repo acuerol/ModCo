@@ -27,7 +27,8 @@ h# 6904 constant uart_tx_busy
 h# 6906 constant uart_rx_busy
 h# 6908 constant uart_tx_init
 h# 690A constant uart_rx_init
-h# 690B constant done
+h# 690B constant uart_done
+h# 690C constant uart_stop
 
 \ Mapa de memoria de la RAM.
 h# 7000 constant RAM_write
@@ -35,5 +36,7 @@ h# 7002 constant RAM_read
 h# 7004 constant RAM_set_addr
 h# 7008 constant RAM_init
 
+\ Mapa de memoria del espDriver
+h# 8000 constant rst_module
 
 

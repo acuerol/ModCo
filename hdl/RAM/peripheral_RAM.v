@@ -24,7 +24,7 @@ module peripheral_RAM(clk, addr, dat_in, dat_out, cs, wr, rd);
 			4'h0: begin sel_mux = (cs && wr) ? 4'h1 : 4'h0; end //write dat
 			4'h2: begin sel_mux = (cs && rd) ? 4'h2 : 4'h0; end //read dat
 			4'h4: begin sel_mux = (cs && wr) ? 4'h4 : 4'h0; end //set_addr
-			4'h8: begin sel_mux = (cs && wr | rd) ? 4'h8 : 4'h0; end //init
+			4'h8: begin sel_mux = (cs && wr) ? 4'h8 : 4'h0; end //init
 			default: begin sel_mux = 4'h0; end
 		endcase
 	end

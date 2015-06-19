@@ -1,4 +1,4 @@
-module uart(clk, rst, init_tx, init_rx ,uart_data_in, uart_tx, uart_tx_busy, uart_data_out, uart_rx, uart_rx_busy, done);
+module uart(clk, rst, init_tx, init_rx ,uart_data_in, uart_tx, uart_tx_busy, uart_data_out, uart_rx, uart_rx_busy, done, stop);
 
 	//--------------------Entradas
 	input clk;
@@ -9,6 +9,8 @@ module uart(clk, rst, init_tx, init_rx ,uart_data_in, uart_tx, uart_tx_busy, uar
 	
 	input [7:0]uart_data_in;
 	input uart_rx;
+
+	input stop;
 	
 	//--------------------Salidas
 	output reg [7:0]uart_data_out;
@@ -50,7 +52,7 @@ module uart(clk, rst, init_tx, init_rx ,uart_data_in, uart_tx, uart_tx_busy, uar
 		end
 	
 	always @(posedge clk) begin
-		if (rst) begin
+		if (rst | stop) begin
 			uart_tx <= 1;
 			bitcount_tx <= 0;
 			shifter <= 0;

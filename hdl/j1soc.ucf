@@ -10,8 +10,11 @@ NET "rx_led" IOSTANDARD = LVCMOS33;
 NET "tx_led" LOC = J15;
 NET "tx_led" IOSTANDARD = LVCMOS33;
 
-NET "uart_tx" LOC = K12;
+NET "uart_tx" LOC = M15;
 NET "uart_tx" IOSTANDARD = LVCMOS33;
 
-NET "uart_rx" LOC = L17;
+NET "uart_rx" LOC = K12;
 NET "uart_rx" IOSTANDARD = LVCMOS33;
+
+NET "mod_rst" LOC = L17;
+NET "mod_rst" IOSTANDARD = LVCMOS33;
