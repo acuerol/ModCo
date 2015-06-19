@@ -2,7 +2,7 @@
 
 `define SIMULATION
 
-module dpRAM_interface_TB;
+module peripheral_RAM_TB;
 
 	reg clk;
 
@@ -23,7 +23,7 @@ module dpRAM_interface_TB;
 	reg [20:0] i;
 	event reset_trigger;
 
-	dpRAM_interface dpRAM(.clk(clk), .addr(addr), .dp_mem_addr(dp_mem_addr), .dat_in(dat_in), .dat_out(dat_out), .cs(cs), .wr(wr), .rd(rd));
+	peripehral_RAM RAM(.clk(clk), .addr(addr), .dp_mem_addr(dp_mem_addr), .dat_in(dat_in), .dat_out(dat_out), .cs(cs), .wr(wr), .rd(rd));
 	
 	initial begin// Initialize Inputs
 		clk = 1;

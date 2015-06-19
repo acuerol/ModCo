@@ -412,34 +412,43 @@ create pad 84 allot create pad|
 
 ( 16bits 8bits )
 : save ( data addr -- )
-	swap dpRAM_write !
-	dpRAM_set_addr !
-	d# 1 dpRAM_init !
+	swap RAM_write !
+	RAM_set_addr !
+	d# 1 RAM_init !
 ;
 
 ( 8bits )
 : load ( addr -- )
-	dpRAM_set_addr !
-	dpRAM_init @
-	dpRAM_read @
+	RAM_set_addr !
+	RAM_init @
+	RAM_read @
 ;
 
+: emit-uart 
+	begin uart_rx_busy @ 0= uart_tx_busy @ 0= and until
+	uart_write !
+	h# 1 uart_tx_init !
+;
+
+: listen-uart
+	begin uart_rx_busy @ 0= uart_tx_busy @ 0= and until
+	uart_rx_init @ drop
+	begin done @ d# 1 = until
+	uart_read @
+;
+
+(
 : emit-uart	\ hecho por el profe
     begin uart_busy @ 0= uart_done @ d# 0 = and until
     uart_data !
 ;
-
+)
 : type-uart
     d# 0 do
         dup c@ emit-uart
         1+
     loop
     drop
-;
-
-: listen-uart
-	begin uart_busy @ 0= uart_done @ d# 1 = and until
-	uart_rx @
 ;
 
 defer emit

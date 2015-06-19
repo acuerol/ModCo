@@ -1,4 +1,4 @@
-module dualport_RAM(clk, init, mem_dat_in, mem_dat_out, mem_addr, rd, wr);
+module RAM(clk, init, mem_dat_in, mem_dat_out, mem_addr, rd, wr);
 	  
 	input clk;
 	input [15:0]mem_dat_in;

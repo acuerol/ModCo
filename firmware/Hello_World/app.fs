@@ -104,31 +104,22 @@ h# 700A @ \ lee lo que hay en el registro h# 700A, queda almacenado en la pila
 
 	h# F1 h# AA save
 	h# F9 h# B2 save
-	h# B3 h# C1 save
-	h# F4 h# D4 save
-	h# E5 h# FF save
-	h# F6 h# 5A save
 	
 	h# AA load emit-uart
 	h# B2 load emit-uart
-	h# C1 load emit-uart
-	h# D4 load emit-uart
-	h# FF load emit-uart
-	h# 5A load emit-uart
+	
+	listen-uart h# AA save
+	h# AA load emit-uart
+	
+	h# F1 h# AA save
+	h# F9 h# B2 save
+	
+	h# AA load emit-uart
+	h# B2 load emit-uart
 	
 	d# 0 begin
-	(
-		h# 0A @ h# c9 = if
-			s" HOLA" type-uart 
-		else
-			d# 5 d# 4 multiplicar drop
-		then	
-	
-		d# 0 h# A000 !
-	)
+
 	1+ again
-	
-	d# 25 emit-uart
 	
 \ usar_dpRAM
 

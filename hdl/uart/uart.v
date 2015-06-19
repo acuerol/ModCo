@@ -1,120 +1,88 @@
-module uart(
-	// Outputs
-	uart_busy,   // High means UART is transmitting
-	uart_tx,     // UART transmit wire
-	
-	uart_dat_o, //RX
-	uart_rx_busy, //RX
-	done, //RX
-	
-	// Inputs
-	uart_wr_i,   // Raise to transmit byte
-	
-	uart_rd_i,	//RX
-	uart_rx, //RX
-	
-	uart_dat_i,  // 8-bit data
-	sys_clk_i,   // System clock, 50MHz
-	sys_rst_i    // System reset
-);
+module uart(clk, rst, init_tx, init_rx ,uart_data_in, uart_tx, uart_tx_busy, uart_data_out, uart_rx, uart_rx_busy, done);
 
-	input uart_wr_i;
-	input [7:0]uart_dat_i;
-	input sys_clk_i;
-	input sys_rst_i;
-
-	//----------------RX
-	input uart_rd_i;
+	//--------------------Entradas
+	input clk;
+	input rst;
+	
+	input init_tx;
+	input init_rx;
+	
+	input [7:0]uart_data_in;
 	input uart_rx;
 	
-	output reg [7:0]uart_dat_o;
+	//--------------------Salidas
+	output reg [7:0]uart_data_out;
 	
-	output uart_rx_busy;
-	
-	reg [3:0] bitcount_rx;
-	
-	wire receiving = (bitcount_rx > 0 & bitcount_rx < 12) ? 1 : 0;
-	wire uart_rx_busy = (bitcount_rx > 0 & bitcount_rx < 10) ? 1 : 0;
-	
-	reg [7:0]uart_dat;
-	output reg done;
-	//----------------RX
-	 
-	output uart_busy;
 	output uart_tx;
-
-	reg [3:0] bitcount;
-	reg [8:0] shifter;
+	
+	output uart_tx_busy;
+	output uart_rx_busy;	
+	
+	output done;
+	
+	//--------------------Variables facilitadoras
+	reg [3:0]bitcount_rx;
+	reg [3:0]bitcount_tx;
+	
+	wire uart_rx;
+	wire uart_rx_busy = |bitcount_rx;
+	wire receiving = |bitcount_rx[3:1];
+	
 	reg uart_tx;
+	wire uart_tx_busy = |bitcount_tx; // invertidos v
+	wire sending = |bitcount_tx[3:1]; // invertidos ^
 
-	wire uart_busy = |bitcount[3:1];
-	wire sending = |bitcount;
-
-	// sys_clk_i is 50MHz.  We want a 115200Hz clock
-
+	reg [8:0]shifter;
+	
+	wire done = receiving ^ uart_rx_busy;
+	
+	//--------------------clk is 50MHz (Nexys2). We want a 115200Hz clock.
 	reg [28:0] d;
-	wire [28:0] dInc = d[28] ? (115200) : (115200 - 50000000);
+	wire [28:0] dInc = d[28] ? (115200) : (115200 - 50000000); // Si el último bit es 1, reinicia el contador, si es 0, lo deja a 115200 de volverse 1.
 	wire [28:0] dNxt = d + dInc;
-	wire ser_clk = ~d[28];
-  
-	always @(posedge sys_clk_i)
-		if (sys_rst_i) begin
+	wire clk_div = ~d[28]; // Pulso resultante resultante.
+
+	always @(posedge clk)
+		if (rst) begin
 			d = 0;
 		end else begin
 			d = dNxt;
 		end
-
-	always @(posedge sys_clk_i) begin
-		if (sys_rst_i) begin
+	
+	always @(posedge clk) begin
+		if (rst) begin
 			uart_tx <= 1;
-			bitcount <= 0;
+			bitcount_tx <= 0;
 			shifter <= 0;
 			
-			done <= 0;
-			uart_dat <= 0;
-			uart_dat_o <= 0;
-			bitcount_rx = 0;
+			uart_data_out <= 0;
+			bitcount_rx <= 0;
 		end else begin
-		// just got a new byte
-			if (uart_wr_i & ~uart_busy) begin
-				shifter <= { uart_dat_i[7:0], 1'h0 };
-				bitcount <= (1 + 8 + 2);
+			//--------------------Tx UART
+			if (~sending & ~receiving & init_tx) begin
+				shifter <= { uart_data_in , 1'h0 }; // Marca el bit de inicio.
+				bitcount_tx <= (1 + 8 + 2); // Para contar 1bit de inicio (low) de transmisión, contar el número de bits a enviar y mantener 2bits en alto para terminar.
 			end
 
-			if (sending & ser_clk) begin
-				{ shifter, uart_tx } <= { 1'h1 , shifter };
-				bitcount <= bitcount - 1;
+			if (uart_tx_busy & clk_div) begin
+				// { 8:0 , 1 } <= { 1 , 8:0 } -> { 110110110 , 0 } <= { 1 , 101101100 } -> { 111011011 , 0 } <= { 1 , 110110110 }
+				{ shifter , uart_tx } <= { 1'h1 , shifter }; 
+				bitcount_tx <= bitcount_tx - 1;
 			end
 			
-			// UART RX
-			if(uart_rd_i & ~uart_busy & ~uart_rx_busy & ~uart_rx & ~receiving) begin
-				bitcount_rx = 1;
-				done <= 0;
-				uart_dat <= 0;
-				uart_dat_o <= 0;
+			//--------------------Rx UART
+			if(~sending & ~receiving & ~uart_rx & init_rx) begin
+				bitcount_rx <= 10;
+				uart_data_out <= 0;
 			end
-			
-			if(done)
-				uart_dat_o <= uart_dat_o;
+		
+			if(uart_rx_busy & clk_div) begin
+				bitcount_rx <= bitcount_rx - 1;
 				
-			
-			if(~done & receiving & ser_clk) begin
-				uart_dat <= {uart_dat, uart_rx};
-				bitcount_rx = bitcount_rx + 1;
-				done <= 0;
-			end
-			
-			if(~uart_rx_busy & receiving) begin
-				done <= 1;
-				uart_dat_o <= uart_dat;
-			end
-			
-			if(~uart_rx_busy & receiving & ser_clk) begin
-				bitcount_rx = 12;
-				done <= 0;
-			end
-				
+				if(receiving) begin
+					uart_data_out <= { uart_rx , uart_data_out[7:1]}; //Revisar, está lleyendo al revés.
+				end
+			end			
 		end
 	end
-  
 endmodule

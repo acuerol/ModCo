@@ -1,87 +1,49 @@
 [*]
 [*] GTKWave Analyzer v3.3.58 (w)1999-2014 BSI
-[*] Mon Jun 15 16:09:01 2015
+[*] Fri Jun 19 03:37:35 2015
 [*]
-[dumpfile] "/home/acuerol/Dropbox/universidad/classes/EDI/j1_soc_edit/hdl/uart/01_TB/simulation/peripheral_uart_TB.vcd"
-[dumpfile_mtime] "Mon Jun 15 16:07:33 2015"
-[dumpfile_size] 3531919
-[savefile] "/home/acuerol/Dropbox/universidad/classes/EDI/j1_soc_edit/hdl/uart/01_TB/peripheral_uart_TB.gtkw"
-[timestart] 0
+[dumpfile] "/home/acuerol/Dropbox/universidad/classes/EDI/j1_soc_edit/hdl/uart/simulation/peripheral_uart_TB.vcd"
+[dumpfile_mtime] "Fri Jun 19 03:37:32 2015"
+[dumpfile_size] 3530973
+[savefile] "/home/acuerol/Dropbox/universidad/classes/EDI/j1_soc_edit/hdl/uart/peripheral_uart_TB.gtkw"
+[timestart] 217000000
 [size] 1366 718
-[pos] -181 -59
-*-18.812746 522000 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[pos] 1185 -59
+*-24.000000 251970000 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
 [treeopen] peripheral_uart_TB.
 [treeopen] peripheral_uart_TB.p_uart.
 [sst_width] 196
-[signals_width] 205
+[signals_width] 213
 [sst_expanded] 1
-[sst_vpaned_height] 397
+[sst_vpaned_height] 296
 @28
 peripheral_uart_TB.p_uart.clk
 @200
 -
 @28
-peripheral_uart_TB.p_uart.addr[3:0]
 peripheral_uart_TB.p_uart.cs
 peripheral_uart_TB.p_uart.rd
 peripheral_uart_TB.p_uart.wr
-@c00023
-peripheral_uart_TB.p_uart.d_in[15:0]
-@28
-(0)peripheral_uart_TB.p_uart.d_in[15:0]
-(1)peripheral_uart_TB.p_uart.d_in[15:0]
-(2)peripheral_uart_TB.p_uart.d_in[15:0]
-(3)peripheral_uart_TB.p_uart.d_in[15:0]
-(4)peripheral_uart_TB.p_uart.d_in[15:0]
-(5)peripheral_uart_TB.p_uart.d_in[15:0]
-(6)peripheral_uart_TB.p_uart.d_in[15:0]
-(7)peripheral_uart_TB.p_uart.d_in[15:0]
-(8)peripheral_uart_TB.p_uart.d_in[15:0]
-(9)peripheral_uart_TB.p_uart.d_in[15:0]
-(10)peripheral_uart_TB.p_uart.d_in[15:0]
-(11)peripheral_uart_TB.p_uart.d_in[15:0]
-(12)peripheral_uart_TB.p_uart.d_in[15:0]
-(13)peripheral_uart_TB.p_uart.d_in[15:0]
-(14)peripheral_uart_TB.p_uart.d_in[15:0]
-(15)peripheral_uart_TB.p_uart.d_in[15:0]
-@1401203
--group_end
 @200
 -
 @28
-peripheral_uart_TB.p_uart.done
-@200
--
-@28
-peripheral_uart_TB.p_uart.uart.uart_wr_i
-peripheral_uart_TB.p_uart.uart.uart_rd_i
-@200
--
-@28
-peripheral_uart_TB.p_uart.uart.ser_clk
-peripheral_uart_TB.p_uart.uart_busy
 peripheral_uart_TB.p_uart.uart.sending
+peripheral_uart_TB.p_uart.uart_tx_busy
+peripheral_uart_TB.p_uart.uart.clk_div
 peripheral_uart_TB.p_uart.uart.uart_tx
 @22
-peripheral_uart_TB.p_uart.uart.uart_dat_i[7:0]
+peripheral_uart_TB.p_uart.uart_data_in[7:0]
 @200
 -
 @28
-peripheral_uart_TB.p_uart.uart.ser_clk
-peripheral_uart_TB.p_uart.uart.uart_rx_busy
 peripheral_uart_TB.p_uart.uart.receiving
+peripheral_uart_TB.p_uart.uart_rx_busy
+peripheral_uart_TB.p_uart.uart.clk_div
+@29
+peripheral_uart_TB.p_uart.uart_data_out[7:0]
+@28
 peripheral_uart_TB.p_uart.uart.uart_rx
-@22
-peripheral_uart_TB.p_uart.uart.uart_dat[7:0]
-peripheral_uart_TB.p_uart.uart.uart_dat_o[7:0]
-peripheral_uart_TB.p_uart.uart.bitcount_rx[3:0]
 @200
 -
-@24
-peripheral_uart_TB.fac[10:0]
-@22
-peripheral_uart_TB.i[20:0]
-@24
-peripheral_uart_TB.i[20:0]
 [pattern_trace] 1
 [pattern_trace] 0

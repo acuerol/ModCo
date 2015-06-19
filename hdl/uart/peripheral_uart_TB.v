@@ -6,48 +6,48 @@ module peripheral_uart_TB;
 
 	reg clk;
 	reg rst;
-	reg [15:0]d_in;
+	
 	reg cs;
-	reg [3:0]addr; // 4 LSB from j1_io_addr
 	reg rd;
 	reg wr;
 	
-	//--------rx
+	reg [3:0]addr;
+	reg [15:0]data_in;
 	reg uart_rx;
-	wire done;
-	//--------rx
 	
-	wire [15:0]d_out;
+	//--------------------Salidas
+	wire [15:0]data_out;
 	wire uart_tx;
-	wire ledout = 0;
 	
+	wire tx_busy;
+	wire rx_busy;
+	
+	wire rx_led;
+	wire tx_led;
+	
+	//--------------------Generar reloj
 	parameter PERIOD = 20;
 	parameter real DUTY_CYCLE = 0.5;
 	parameter OFFSET = 0;
 	
 	reg [20:0] i;
-	reg [10:0] fac;
-	reg [20:0] fac2;
-	reg [7:0] flag;
-	
+	reg [20:0] fac;
 	event reset_trigger;
 		
-	peripheral_uart p_uart(.clk(clk) , .rst(rst) , .d_in(d_in) , .cs(cs) , .addr(addr) , .rd(rd) , .wr(wr) , .d_out(d_out) ,  .uart_tx(uart_tx) , .uart_rx(uart_rx) , .done(done) , .ledout(ledout) );
+	peripheral_uart p_uart(.clk(clk) , .rst(rst), .addr(addr), .cs(cs), .rd(rd), .wr(wr), .data_in(data_in), .uart_tx(uart_tx), .tx_led(tx_led), .data_out(data_out), .uart_rx(uart_rx), .rx_led(rx_led));
 	
 	initial begin// Initialize Inputs
-		flag = 0;
-		fac = 4000;
-		fac2 = 10000;
-		
 		clk = 1;
 		rst = 1;
-		d_in = 0;
+		data_in = 0;
 		cs = 0;
 		addr = 3'b000;
 		rd = 0;
 		wr = 0;
 		
 		uart_rx=1;
+		
+		fac = 1;
 	end
 
 	initial begin// Process for sys_clk_i
@@ -60,86 +60,88 @@ module peripheral_uart_TB;
 	end
 	
 	initial begin
-		@ (posedge clk)
-		@ (posedge clk)
-		rst = 0;
-				
 		for(i = 0; i < 30000; i = i+1) begin
 			@ (posedge clk);
 			
+			if(i == 10) begin
+				rst = 0;
+			end
+			
+			//--------------------Envia EE = 11101110
+			if(i == 15) begin
+				addr = 4'h0;
+				cs = 1;
+				rd = 0;
+				wr = 1;
+				data_in = 8'hEE;
+			end
+			
 			if(i == 20) begin
-				addr = 4'b0110;
+				addr = 4'h8;
 				cs = 1;
-				wr = 1;
 				rd = 0;
-				d_in = 8'h26;
-				uart_rx=1;
+				wr = 1;
+				data_in = 0;
 			end
 			
-			if(i == 30) begin
-				addr = 4'b0110;
-				cs = 1;
-				wr = 1;
-				rd = 0;
-				d_in = 8'h0;
-			end
-			
-			if(i == 40) begin
-				addr = 4'b0000;
+			if(i == 25) begin
+				addr = 4'hC;
 				cs = 0;
-				wr = 0;
 				rd = 0;
+				wr = 0;
+				data_in = 0;
 			end
 			
-//			envio 2
-			
-			if(i == 7000) begin
-				addr = 4'b0110;
+			//--------------------Envia C2 = 11000010
+			if(i == 6000) begin
+				addr = 4'h0;
 				cs = 1;
+				rd = 0;
 				wr = 1;
-				rd = 0;
-				d_in = 8'h2D;
+				data_in = 8'hC2;
 			end
 			
-			if(i == 7005) begin
-				addr = 4'b0110;
+			if(i == 6005) begin
+				addr = 4'h8;
 				cs = 1;
+				rd = 0;
 				wr = 1;
-				rd = 0;
-				d_in = 8'h0;
+				data_in = 0;
 			end
 			
-			if(i == 7010) begin
-				addr = 4'b0000;
-				cs = 0;
-				wr = 0;
-				rd = 0;
-			end
-			
-			if(i == 12153) begin
-				addr = 4'h2;
+			if(i == 6015) begin
+				addr = 4'hC;
 				cs = 1;
+				rd = 0;
 				wr = 0;
+			end
+			
+			//--------------------Iniciar escucha.
+			if(i == 11000+fac) begin
+				addr = 4'hA;	
+				cs = 1;
 				rd = 1;
+				wr = 0;
 			end
 			
-			
-			//--------------------RX 10101110 -170
-			
-			if(i == 11150+fac) begin
-				 // inicio de recepción
+			if(i == 11005+fac) begin
+				addr = 4'hC;	
+				cs = 1;
+				rd = 0;
+				wr = 0;
 			end
 			
+			//--------------------Rx 10101110 = AE			
 			if(i == 11520+fac) begin
 				uart_rx = 0; // inicio de recepción
 			end
 			
 			if(i == 11954+fac) begin
-				uart_rx = 1;
+				uart_rx = 0;
 			end
 			
 			if(i == 12388+fac) begin
-				uart_rx = 0;
+				uart_rx = 1;
 			end
 			
 			if(i == 12822+fac) begin
@@ -147,11 +149,11 @@ module peripheral_uart_TB;
 			end
 			
 			if(i == 13256+fac) begin
-				uart_rx = 0;
+				uart_rx = 1;
 			end
 			
 			if(i == 13690+fac) begin
-				uart_rx = 1;
+				uart_rx = 0;
 			end
 			
 			if(i == 14124+fac) begin
@@ -159,70 +161,25 @@ module peripheral_uart_TB;
 			end
 			
 			if(i == 14558+fac) begin
-				uart_rx = 1;
+				uart_rx = 0;
 			end
 			
 			if(i == 14992+fac) begin
-				uart_rx = 0;
+				uart_rx = 1;
 			end
 			// end
 			if(i == 15426+fac) begin
 				uart_rx = 1;
 			end
-			//--------------------RX  10101110-170
 			
-			if(i == 19900) begin
+			//--------------------Iniciar escucha.
+			if(i == 20000) begin
 				addr = 4'h2;
 				cs = 1;
-				wr = 0;
 				rd = 1;
+				wr = 0;
 			end
 			
-			//--------------------RX 00000011 -3
-			
-			if(i == 11520+fac2) begin
-				uart_rx = 0; // inicio de recepción
-				flag = 1;
-			end
-			
-			if(i == 11954+fac2) begin
-				uart_rx = 0;
-				flag = 2;
-			end
-			
-			if(i == 12388+fac2) begin
-				uart_rx = 0;
-			end
-			
-			if(i == 12822+fac2) begin
-				uart_rx = 0;
-			end
-			
-			if(i == 13256+fac2) begin
-				uart_rx = 0;
-			end
-			
-			if(i == 13690+fac2) begin
-				uart_rx = 0;
-			end
-			
-			if(i == 14124+fac2) begin
-				uart_rx = 0;
-			end
-			
-			if(i == 14558+fac2) begin
-				uart_rx = 1;
-			end
-			
-			if(i == 14992+fac2) begin
-				uart_rx = 1;
-			end
-			// end
-			if(i == 15426+fac2) begin
-				uart_rx = 1;
-			end
-			//--------------------RX 00000011 -3
-
 		end
 	end
 	

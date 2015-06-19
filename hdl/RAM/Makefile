@@ -1,4 +1,4 @@
-DESIGN          = dpRAM_interface
+DESIGN          = peripheral_RAM
 PINS            = $(DESIGN).ucf
 DEVICE          = xC3s500e-fg320
 BGFLAGS         = -g TdoPin:PULLNONE -g DonePin:PULLUP \
@@ -12,7 +12,7 @@ IVERILOG        = iverilog
 
 SAKC_IP         = 192.168.254.101
 
-SRC             = $(DESIGN).v dualport_RAM.v
+SRC             = $(DESIGN).v RAM.v
 SIM_SRC = $(DESIGN)_TB.v          \
 
  
