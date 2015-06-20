@@ -25,6 +25,7 @@ module j1soc#(
    wire			[15:0] div_dout;
    wire			[7:0] uart_dout;
    wire			[15:0] ram_dout;
+   wire [15:0]timer_dout;
 //------------------------------------ regs and wires-------------------------------
 
 
@@ -38,30 +39,32 @@ module j1soc#(
 
 	peripheral_RAM Rm(.clk(sys_clk_i), .addr(j1_io_addr[3:0]), .dat_in(j1_io_dout), .dat_out(ram_dout), .cs(cs[4]), .rd(j1_io_rd), .wr(j1_io_wr));
 
-	peripheral_espDriver espD(.clk(sys_clk_i), .sys_rst(sys_rst_i), .addr(j1_io_addr[3:0]), .cs(cs[4]), .rd(j1_io_rd), .wr(j1_io_wr), .mod_rst(mod_rst));
+	peripheral_espDriver espD(.clk(sys_clk_i), .sys_rst(sys_rst_i), .addr(j1_io_addr[3:0]), .cs(cs[3] & cs[4]), .rd(j1_io_rd), .wr(j1_io_wr), .mod_rst(mod_rst));
+	
+	peripheral_timer ptim(.clk(sys_clk_i), .rst(sys_rst_i), .addr(j1_io_addr[3:0]), .cs(cs[2] & cs[3] & cs[4]), .rd(j1_io_rd), .wr(j1_io_wr), .data_out(timer_dout));
 	
   // ============== Chip_Select (Addres decoder) ========================  // se hace con los 8 bits mas significativos de j1_io_addr
-  always @*
-  begin
+  always @(*) begin
       case (j1_io_addr[15:8])	// direcciones - chip_select
-        8'h67: cs = 4'b1000; 		//mult
-        8'h68: cs = 4'b0100;		//div
-        8'h69: cs = 4'b0010;		//uart
-        8'h70: cs = 4'b0001;		//ram
-        8'h80: cs = 4'b0011; // espDriver
+        8'h67: cs = 4'b1000; // mult
+        8'h68: cs = 4'b0100; // div
+        8'h69: cs = 4'b0010; // uart
+        8'h70: cs = 4'b0001; // RAM
+        8'h71: cs = 4'b0011; // espDriver
+        8'h72: cs = 4'b0111; // Timer
         default: cs = 3'b000;
       endcase
   end
   // ============== Chip_Select (Addres decoder) ========================  //
 
   // ============== MUX ========================  // se encarga de lecturas del J1
-  always @*
-  begin
+  always @(*) begin
       case (cs)
         4'b1000: j1_io_din = mult_dout; 
         4'b0100: j1_io_din = div_dout;
         4'b0010: j1_io_din = uart_dout; 
         4'b0001: j1_io_din = ram_dout; 
+        4'b0111: j1_io_din = timer_dout;
         default: j1_io_din = 16'h0666;
       endcase
   end

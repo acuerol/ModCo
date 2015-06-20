@@ -40,14 +40,7 @@ module uart_TB;
 		uart_rd_i = 0;
 	end
 
-	initial begin// Process for sys_clk_i
-		#OFFSET;
-		forever begin
-			sys_clk_i = 1'b0;
-			#(PERIOD-(PERIOD*DUTY_CYCLE)) sys_clk_i = 1'b1;
-			#(PERIOD*DUTY_CYCLE);
-		end
-	end
+	
 	
 	initial begin				
 		for(i=0; i<20000; i=i+1) begin

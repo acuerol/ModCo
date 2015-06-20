@@ -1,10 +1,10 @@
-DESIGN          = j1soc
+DESIGN          = peripheral_timer
 PINS            = $(DESIGN).ucf
 DEVICE          = xC3s500e-fg320
 BGFLAGS         = -g TdoPin:PULLNONE -g DonePin:PULLUP \
                   -g CRC:enable -g StartUpClk:CCLK
 
-XILINXCADROOT   = /opt/Xilinx/14.7/ISE_DS/ISE/bin/lin64/ise
+XILINXCADROOT   = /opt/Xilinx/13.4/ISE_DS/ISE/bin/lin/ise
 SIM_CMD         = vsim 
 SIM_COMP_SCRIPT = simulation/$(DESIGN)_TB.do
 SIMGEN_OPTIONS  = -p $(FPGA_ARCH) -lang $(LANGUAGE)
@@ -12,19 +12,11 @@ IVERILOG        = iverilog
 
 SAKC_IP         = 192.168.254.101
 
-MULT		= multiplier
-MULT_32	= multiplier/mult_32
-J1			= j1
-DIV		= divider
-DIV_16		= divider/div_16
-UART		= uart
-pRAM		= RAM
-ESP		= espDriver
-TIMER		= timer
-
-SRC             = $(DESIGN).v j1.v dpram.v $(UART)/uart.v $(UART)/peripheral_uart.v $(MULT)/peripheral_mult.v  $(MULT_32)/acc.v  $(MULT_32)/comp.v  $(MULT_32)/control_mult.v  $(MULT_32)/lsr.v  $(MULT_32)/rsr.v  $(MULT_32)/mult_32.v $(DIV)/peripheral_div.v $(DIV_16)/control_div.v $(DIV_16)/counter_div.v $(DIV_16)/div_16.v $(DIV_16)/final_result.v $(DIV_16)/lsr_div.v $(DIV_16)/subtractor.v $(pRAM)/RAM.v $(pRAM)/peripheral_RAM.v $(ESP)/espDriver.v $(ESP)/peripheral_espDriver.v $(TIMER)/peripheral_timer.v $(TIMER)/timer.v
+SRC             = $(DESIGN).v timer.v
 
 SIM_SRC = $(DESIGN)_TB.v          \
+
+
 
  
 all:            bits
@@ -34,10 +26,9 @@ remake:         clean-build all
 clean:
 	rm -f *~ */*~ a.out *.log *.key *.edf *.ps trace.dat 
 	rm -f *.bit
-	rm -rf build
 
 cleanall: clean
-	rm -rf build simulation/work simulation/transcript  simulation/vsim.wlf simulation/$(DESIGN)_TB.vvp simulation/*
+	rm -rf build simulation/work simulation/transcript  simulation/vsim.wlf simulation/$(DESIGN)_TB.vvp simulation/$(DESIGN)_TB.vcd
 
 bits:           $(DESIGN).bit
 
@@ -96,9 +87,18 @@ postsim: build/project.ngc
 
 
 iversim:  build/project.src
-	$(IVERILOG) -gno-io-range-error -o simulation/$(DESIGN)_TB.vvp $(VINCDIR) $(SRC) $(SIM_SRC) -s $(DESIGN)_TB
+	$(IVERILOG) -o simulation/$(DESIGN)_TB.vvp $(VINCDIR) $(SRC) $(SIM_SRC) -s $(DESIGN)_TB
 	vvp simulation/$(DESIGN)_TB.vvp; mv $(DESIGN)_TB.vcd simulation/
 	gtkwave simulation/$(DESIGN)_TB.vcd&
+	
+simcontrol: 
+	$(IVERILOG) -o simulation/control_TB.vvp control.v control_TB.v -s control_TB
+	vvp simulation/control_TB.vvp; mv control_TB.vcd simulation/
+	gtkwave simulation/control_TB.vcd&
 
 upload: $(DESIGN).bit
 	scp $(DESIGN).bit root@$(SAKC_IP): 
+	
+config: $(DESIGN).bit
+	djtgcfg init -d $(BOARD)
+	djtgcfg prog -d $(BOARD) --index 0 --file $(DESIGN).bit

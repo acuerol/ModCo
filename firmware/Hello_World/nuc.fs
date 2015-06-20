@@ -455,9 +455,16 @@ create pad 84 allot create pad|
 ;
 
 \ --------------------espDriver definitions--------------------
-: reset_module
-	d# 1 rst_module !
+: reset-module
+	d# 1 module_rst !
 ;
+
+\ --------------------Timer definitions--------------------
+: count
+	h# 1 timer_rst !
+	begin dup timer_cycles @ < until
+;
+
 
 defer emit
 ' emit-uart is emit

@@ -37,6 +37,12 @@ h# 7004 constant RAM_set_addr
 h# 7008 constant RAM_init
 
 \ Mapa de memoria del espDriver
-h# 8000 constant rst_module
+h# 7100 constant module_rst
+
+\ Mapa de memoria del Timer
+h# 7200 constant timer_cycles
+h# 7202 constant timer_rst
+
+
 
 

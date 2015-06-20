@@ -103,49 +103,13 @@ h# 700A @ \ lee lo que hay en el registro h# 700A, queda almacenado en la pila
 : main 	
 	
 	(
-	listen-uart h# AA save
-	h# AA load emit-uart
-	)
-	
 	s" AT+CWMODE?" type-uart
 	h# 0d emit-uart h# 0a emit-uart
-	listen-uart emit-uart
+	)
 	
 	d# 0 begin
-		
+		d# 2000 count
+		d# 2 emit-uart	
 	1+ again
-	
-\ usar_dpRAM
 
-
-\ multiplier
-\ fibonacci 
-
-\ s" A " type-uart   \ Almacena el string y la longitud en la pila en el top
-\  h# AA h# A000 !       \ ! envía el dato en N  a la dirección T
-\  h# BB h# A001 !
-\  h# CC h# A002 !
-\  h# 30 h# f000 h# 31 h# f001 ! ! 
-
-\ Para enviar varios datos a posiciones de memoria contiguas se utiliza este código
-\ Se almacenan los datos a enviar en la pila 30h - 37h, después la primera dirección de memoria en este caso A000h y por último el múmero de datos a enviar 8
-\ en este caso. Al ejecutar este segmento de código se escribirán los siguientes datos en las siguientes direcciones:
-\ 30h a000; 31h a001; 32h a002; 33h a003; 34h a004; 35h a005; 36h a006; 37h a007;
-
-\  h# 37 h# 36 h# 35 h# 34 h# 33 h# 32 h# 31 h# 30  h# a000  d# 8
-\  d# 0 
-\  do 
-\   send_inc_addres 
-\  loop
-
-\ ( lo que debe estar en el stack antes de ejecutar la función -- como queda el stack después de ejecutar la función  )
-\ /MOD	 ( n1 n2 -- rem quot )	 Divides. Returns the remainder and quotient.	
-\ MOD	 ( n1 n2 -- rem )	 Returns the remainder from division.
-\ SWAP is defined to switch the order of the top two stack items.
-\ SWAP	 ( n1 n2 -- n2 n1 )	 Reverses the top two stack items.	
-\ DUP	 ( n -- n n )	 Duplicates the top stack item.	
-\ OVER	 ( n1 n2 -- n2 n1 n2 )	 Makes a copy of the second item and pushes it on top.	
-\ ROT	 ( n1 n2 n3 -- n2 n3 n1 )	 Rotates the third item to the top.	
-\ DROP	 ( n -- )	 Discards the top stack item.	
- \ : PENTAJUMPS  50 0 DO  I .  5 +LOOP ;
 ;
