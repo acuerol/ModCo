@@ -43,6 +43,10 @@ h# 7100 constant module_rst
 h# 7200 constant timer_cycles
 h# 7202 constant timer_rst
 
-
+\ Mapa de memoria de la RAM.
+h# 7300 constant strRAM_write
+h# 7302 constant strRAM_read
+h# 7304 constant strRAM_set_addr
+h# 7308 constant strRAM_init
 
 

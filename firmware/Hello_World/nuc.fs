@@ -413,7 +413,7 @@ create pad 84 allot create pad|
 \ --------------------RAM definitions--------------------
 
 \ Almacena un dato en una dirección de la RAM.
-\ data[15:0] addr[7:0]
+\ [15:0]data [7:0]addr
 : save ( data addr -- )
 	swap RAM_write !
 	RAM_set_addr !
@@ -421,48 +421,103 @@ create pad 84 allot create pad|
 ;
 
 \ Carga un dato desde una dirección de la RAM.
-\ addr[7:0]
+\ [7:0]addr
 : load ( addr -- )
 	RAM_set_addr !
-	RAM_init !
+	RAM_init @ drop
 	RAM_read @
+;
+
+\ --------------------strRAM definitions--------------------
+
+\ Almacena un dato en una dirección de la RAM.
+\ [7:0]data [7:0]addr
+: save-str ( data addr -- )
+	swap strRAM_write !
+	strRAM_set_addr !
+	d# 1 strRAM_init !
+;
+
+\ Carga un dato desde una dirección de la RAM.
+\ [7:0]addr
+: load-str ( addr -- )
+	strRAM_set_addr !
+	strRAM_init @ drop
+	strRAM_read @
 ;
 
 \ --------------------UART definitions--------------------
 
 \ Emitir un dato por la UART.
-: emit-uart 
+: emit-uart ( dat -- )
 	begin uart_rx_busy @ 0= uart_tx_busy @ 0= and until
 	uart_write !
 	h# 1 uart_tx_init !
 ;
 
-\ Poner la UART en escucha.
-: listen-uart
+\ Poner la UART en escucha duramte time milisegundos.
+: listen-uart ( time )
 	begin uart_rx_busy @ 0= uart_tx_busy @ 0= and until
+	
+	h# 1 timer_rst !
 	uart_rx_init @ drop
-	begin uart_done @ d# 1 = until
+	
+	begin 
+	timer_cycles @ uart_done @ -rot over	( time cycles done ) ( done time cycles time )
+	> -rot -rot d# 1 = or until ( done time flag1 ) ( flag1 done time ) ( time flag1 done )
 	uart_read @
 ;
 
+\ 
+: listen-and-save ( addr -- )
+	
+;
+
 \ Emitir un string por la UART, emite caracter por caracter.
-: type-uart
-    d# 0 do
-        dup c@ emit-uart
-        1+
-    loop
-    drop
+: type-uart ( addr length -- )
+	d# 0 do
+		dup c@ emit-uart
+		1+
+	loop
+	drop
+;
+
+\ Emitir un string almacenado en strRAM por la UART, emite caracter por caracter.
+: type-str-uart ( addr length -- )
+	swap h# 1 + swap
+	d# 0 do
+		dup load-str emit-uart
+		1+
+	loop
+	drop
+;
+
+\ Emite un string por la UART añadiendo los saltos 0d y 0a.
+: type-to-ESP ( addr length -- )
+	d# 0 do
+		dup c@ emit-uart
+	1+
+	loop
+	h# 0d emit-uart h# 0a emit-uart
+	drop
 ;
 
 \ --------------------espDriver definitions--------------------
-: reset-module
+: reset-module ( )
 	d# 1 module_rst !
 ;
 
 \ --------------------Timer definitions--------------------
-: count
+\ Cuenta n milisegundos.
+\ [15:0]n
+: count ( n -- )
 	h# 1 timer_rst !
 	begin dup timer_cycles @ < until
+;
+
+\ --------------------Util definitions--------------------
+: get ( addr -- n1 )
+	dup @ swap drop
 ;
 
 

@@ -1,7 +1,7 @@
-module peripheral_RAM(clk, addr, dat_in, dat_out, cs, wr, rd);
+module peripheral_strRAM(clk, addr, dat_in, dat_out, cs, wr, rd);
   
 	input clk;
-	input [15:0]dat_in;
+	input [7:0]dat_in;
 	input cs;
 	input [3:0]addr; // 8 LSB from j1_io_addr
 	input rd;
@@ -9,14 +9,14 @@ module peripheral_RAM(clk, addr, dat_in, dat_out, cs, wr, rd);
 	
 	reg init;
 	
-	output reg [15:0]dat_out;
+	output reg [7:0]dat_out;
 
 	reg [3:0]sel_mux;
 
 	//------------------------------------ regs and wires-------------------------------
-	reg [15:0]mem_dat_in;
+	reg [7:0]mem_dat_in;
 	reg [7:0]mem_addr;
-	wire [15:0]mem_dat_out;
+	wire [7:0]mem_dat_out;
 	//------------------------------------ regs and wires-------------------------------
 	
 	always @(*) begin
@@ -36,5 +36,5 @@ module peripheral_RAM(clk, addr, dat_in, dat_out, cs, wr, rd);
 		init = sel_mux[3];
 	end
 
-	RAM RAM(.clk(clk), .init(init), .mem_dat_in(mem_dat_in), .mem_dat_out(mem_dat_out), .mem_addr(mem_addr), .rd(cs && rd), .wr(cs && wr));	
+	strRAM RAM(.clk(clk), .init(init), .mem_dat_in(mem_dat_in), .mem_dat_out(mem_dat_out), .mem_addr(mem_addr), .rd(cs && rd), .wr(cs && wr));	
 endmodule

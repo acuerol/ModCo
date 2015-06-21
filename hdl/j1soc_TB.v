@@ -49,7 +49,7 @@ module j1soc_TB ();
 	  	$dumpvars(-1, j1soc_TB);
 	
 	  	#10 -> reset_trigger;
-	  	#((PERIOD*DUTY_CYCLE)*90000) $finish;
+	  	#((PERIOD*DUTY_CYCLE)*120000) $finish;
 	end
 
 
