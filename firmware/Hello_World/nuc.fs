@@ -1,7 +1,6 @@
 ( Nucleus: ANS Forth core and ext words      JCB 13:11 08/24/10)
 
 module[ nuc"
-
 0 constant false ( 6.2.1485 )
 : depth dsp h# ff and ;
 65535 constant true  ( 6.2.2298 )
@@ -410,6 +409,8 @@ create pad 84 allot create pad|
     [ 4294967296. 115200 WB_CLOCK_FREQ m*/ drop h# ffffff00 and dup swap 16 rshift ] 2literal
 ;
 
+h# 64 constant received-uart
+
 \ --------------------RAM definitions--------------------
 
 \ Almacena un dato en una dirección de la RAM.
@@ -446,62 +447,6 @@ create pad 84 allot create pad|
 	strRAM_read @
 ;
 
-\ --------------------UART definitions--------------------
-
-\ Emitir un dato por la UART.
-: emit-uart ( dat -- )
-	begin uart_rx_busy @ 0= uart_tx_busy @ 0= and until
-	uart_write !
-	h# 1 uart_tx_init !
-;
-
-\ Poner la UART en escucha duramte time milisegundos.
-: listen-uart ( time )
-	begin uart_rx_busy @ 0= uart_tx_busy @ 0= and until
-	
-	h# 1 timer_rst !
-	uart_rx_init @ drop
-	
-	begin 
-	timer_cycles @ uart_done @ -rot over	( time cycles done ) ( done time cycles time )
-	> -rot -rot d# 1 = or until ( done time flag1 ) ( flag1 done time ) ( time flag1 done )
-	uart_read @
-;
-
-\ 
-: listen-and-save ( addr -- )
-	
-;
-
-\ Emitir un string por la UART, emite caracter por caracter.
-: type-uart ( addr length -- )
-	d# 0 do
-		dup c@ emit-uart
-		1+
-	loop
-	drop
-;
-
-\ Emitir un string almacenado en strRAM por la UART, emite caracter por caracter.
-: type-str-uart ( addr length -- )
-	swap h# 1 + swap
-	d# 0 do
-		dup load-str emit-uart
-		1+
-	loop
-	drop
-;
-
-\ Emite un string por la UART añadiendo los saltos 0d y 0a.
-: type-to-ESP ( addr length -- )
-	d# 0 do
-		dup c@ emit-uart
-	1+
-	loop
-	h# 0d emit-uart h# 0a emit-uart
-	drop
-;
-
 \ --------------------espDriver definitions--------------------
 : reset-module ( )
 	d# 1 module_rst !
@@ -518,6 +463,81 @@ create pad 84 allot create pad|
 \ --------------------Util definitions--------------------
 : get ( addr -- n1 )
 	dup @ swap drop
+;
+
+\ --------------------UART definitions--------------------
+
+\ Emitir un dato por la UART.
+: emit-uart ( dat -- )
+	begin uart_rx_busy @ 0= uart_tx_busy @ 0= and until
+	uart_write !
+	h# 1 uart_tx_init !
+;
+
+\ Poner la UART en escucha durante time milisegundos.
+: listen-uart ( time )
+	begin uart_rx_busy @ 0= uart_tx_busy @ 0= and until
+	
+	h# 1 timer_rst !
+	uart_rx_init @ drop
+	
+	begin 
+	timer_cycles @ uart_done @ -rot over	( time cycles done ) ( done time cycles time )
+	> -rot -rot d# 1 = or until ( done time flag1 ) ( flag1 done time ) ( time flag1 done )
+	drop
+	uart_read @
+;
+
+variable acc
+
+\ Escucha datos de la UART por 1s indefinidamente, se detiene cuando el dato recibido es cero.
+: listen-and-save (  )
+	h# 0 acc !
+\	h# 0 received-uart save-str \ Iniciar longitud en cero.
+	
+	begin
+		received-uart 1+ acc get + \ Corre en counter unidades la posición.		( addr+acc )
+		d# 100 listen-uart																	( addr+acc ou )
+		dup 0= invert if																		( addr+acc ou ou ) ( addr+acc ou )
+			swap over swap save-str															( ou addr+acc ) ( ou addr+acc ou ) ( ou ou addr+acc ) ( ou )
+			acc get 1+ acc !
+		then
+	0= until ( AÑADIR si counter > 155 desbodamiento )
+	acc get received-uart save-str
+;
+
+\ Emitir un string por la UART, emite caracter por caracter.
+: type-uart ( addr length -- )
+	d# 0 do
+		dup c@ emit-uart
+		1+
+	loop
+	drop
+;
+
+variable addr
+variable length
+variable pos
+
+\ Emitir un string almacenado en strRAM por la UART, emite caracter por caracter.
+: type-str-uart ( addr length -- )
+	length ! addr ! h# 1 pos !
+	length get h# 0 > if
+		begin
+			addr get pos get + load-str emit-uart
+			pos get 1+ pos !
+		pos get length get > until
+	then
+;
+
+\ Emite un string por la UART añadiendo los saltos 0d y 0a.
+: type-to-ESP ( addr length -- )
+	d# 0 do
+		dup c@ emit-uart
+	1+
+	loop
+	h# 0d emit-uart h# 0a emit-uart
+	drop
 ;
 
 

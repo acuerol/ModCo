@@ -12,7 +12,6 @@ h# 6706 constant multi_done
 h# 6708 constant multi_pp_high
 h# 670A constant multi_pp_low
 
-
 \ memory map divider:
 h# 6800 constant div_a		
 h# 6802 constant div_b
@@ -48,5 +47,3 @@ h# 7300 constant strRAM_write
 h# 7302 constant strRAM_read
 h# 7304 constant strRAM_set_addr
 h# 7308 constant strRAM_init
-
-

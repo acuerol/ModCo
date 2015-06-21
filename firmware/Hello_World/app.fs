@@ -56,18 +56,39 @@ variable ant
 	\ d# 3 + div_a !
 ;
 
-variable a
-
 : main 	
+	\ d# 2000 count
+	s" AT" type-uart \ h# 00 str-to-RAM
+	\ h# 00 dup load-str type-str-uart
+	h# 0a emit-uart h# 0d emit-uart
 	
-	\ str-to_RAM y char-at
+	d# 1000 count
 	
-	s" Hola Mundo" str-to-RAM
-
+	s" AT+CWMODE?" type-uart
+	h# 0a emit-uart h# 0d emit-uart
+	
+	\ listen-and-save
+	\ h# 64 dup load-str type-str-uart
+	
+\	h# 00 dup load-str h# CC dup load-str contains emit-uart
+	
+\	s" Hola Mundo" h# 00 str-to-RAM
+	
+\	h# AA h# 05 h# 3 substring
+\	h# AA dup load-str type-str-uart
+	
+\	h# 6F h# 00 last-index emit-uart
+	
+	(
+	s" Hola Mundoi" h# 00 str-to-RAM
+	s" Hola Mundo" h# CC str-to-RAM
+	
+	h# 00 dup load-str h# CC dup load-str compare emit-uart
+	)
 
 \	h# 5 char-at emit-uart
 	
-	\ first-index
+\ 	h# 61 h# CC first-index emit-uart
 	 
 \	s" Hola Mundo" h# 00 str-to-RAM
 \	s" Prueba concat" h# AA str-to-RAM
@@ -92,11 +113,8 @@ variable a
 	)
 	
 	d# 0 begin
-	
-	(
-		d# 2000 count
-		d# 2 emit-uart	
-	)
+		
+\		d# 5000 count
 	1+ again
 		
 ;
