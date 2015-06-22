@@ -46,3 +46,9 @@ h# 7300 constant strRAM_write
 h# 7302 constant strRAM_read
 h# 7304 constant strRAM_set_addr
 h# 7308 constant strRAM_init
+
+\ Mapa de memoria indLED.
+h# 7400 constant on1
+h# 7402 constant on2
+h# 7404 constant off1
+h# 7408 constant off2

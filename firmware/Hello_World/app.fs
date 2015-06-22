@@ -57,13 +57,16 @@ variable ant
 ;
 
 : main
-	s" Ini" type-uart emit-cmd-end
 
-	
-	s" Fin" type-uart emit-cmd-end
-	
 	d# 0 begin
-\		d# 5000 count
-	1+ again
-		
+	
+	d# 200 count o1
+	d# 200 count of1
+	d# 200 count o2
+	d# 200 count of2
+	
+	s" AT" h# 00 str-to-RAM
+	h# 00 dup load-str type-str-uart
+	
+	1+ again			
 ;

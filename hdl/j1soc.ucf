@@ -18,3 +18,9 @@ NET "uart_rx" IOSTANDARD = LVCMOS33;
 
 NET "mod_rst" LOC = L17;
 NET "mod_rst" IOSTANDARD = LVCMOS33;
+
+NET "led1" LOC = R4;
+NET "led1" IOSTANDARD = LVCMOS33;
+
+NET "led2" LOC = F4;
+NET "led2" IOSTANDARD = LVCMOS33;

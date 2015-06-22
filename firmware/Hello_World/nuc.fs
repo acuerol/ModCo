@@ -548,6 +548,23 @@ variable pos
 	drop
 ;
 
+\ -------------------------------indLED
+: o1
+	h# 1 on1 !
+;
+
+: o2
+	h# 1 on2 !
+;
+
+: of1
+	h# 1 off1 !
+;
+
+: of2
+	h# 1 off2 !
+;
+
 defer emit
 ' emit-uart is emit
 

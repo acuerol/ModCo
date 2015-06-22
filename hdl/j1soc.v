@@ -1,7 +1,7 @@
 module j1soc#(
               //parameter   bootram_file     = "../../firmware/hello_world/j1.mem"    // For synthesis            
               parameter   bootram_file     = "../firmware/Hello_World/j1.mem"       // For simulation         
-  )(sys_clk_i, sys_rst_i, uart_tx, uart_rx, rx_led, tx_led, mod_rst);
+  )(sys_clk_i, sys_rst_i, uart_tx, uart_rx, rx_led, tx_led, mod_rst, led1, led2);
 
    input sys_clk_i, sys_rst_i;
    
@@ -9,6 +9,9 @@ module j1soc#(
    output tx_led;
    output rx_led;
 	output mod_rst;
+
+	output led1;
+	output led2;	
 
 	input uart_rx;
 
@@ -35,7 +38,7 @@ module j1soc#(
 	reg csr;
 	reg cst;
 	reg css;
-	
+	reg csind;
 	
 //------------------------------------ regs and wires-------------------------------
 
@@ -56,6 +59,8 @@ module j1soc#(
 	
 	peripheral_strRAM per_strR(.clk(sys_clk_i), .addr(j1_io_addr[3:0]), .dat_in(j1_io_dout[7:0]), .dat_out(strRAM_dout), .cs(css), .rd(j1_io_rd), .wr(j1_io_wr));
 	
+	indLED ind(.clk(sys_clk_i) , .rst(sys_rst_i), .addr(j1_io_addr[3:0]), .cs(csind), .rd(j1_io_rd), .wr(j1_io_wr), .led1(led1), .led2(led2));
+	
   // ============== Chip_Select (Addres decoder) ========================  // se hace con los 8 bits mas significativos de j1_io_addr
   always @(*) begin
       case (j1_io_addr[15:8])	// direcciones - chip_select
@@ -66,6 +71,7 @@ module j1soc#(
         8'h71: cs = 4'h5; // espDriver
         8'h72: cs = 4'h6; // Timer
         8'h73: cs = 4'h7; // strRAM
+        8'h74: cs = 4'h8; // indLED
         default: cs = 4'h0;
       endcase
   end
@@ -93,5 +99,6 @@ module j1soc#(
 		csr = (cs == 4'h5) ? 1 : 0;
 		cst = (cs == 4'h6) ? 1 : 0;
 		css = (cs == 4'h7) ? 1 : 0;
+		csind = (cs == 4'h8) ? 1 : 0;
 	end
 endmodule // top

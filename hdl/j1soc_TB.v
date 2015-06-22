@@ -11,8 +11,10 @@ module j1soc_TB ();
 	wire tx_led; 
 	wire rx_led;
 	wire mod_rst;
+	wire led1;
+	wire led2;
 
-	j1soc uut (sys_clk_i, sys_rst_i, uart_tx, uart_rx, rx_led, tx_led, mod_rst);
+	j1soc uut (sys_clk_i, sys_rst_i, uart_tx, uart_rx, rx_led, tx_led, mod_rst, led1, led2);
 
 	parameter PERIOD = 20;
 	parameter real DUTY_CYCLE = 0.5;
