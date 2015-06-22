@@ -27,7 +27,6 @@ h# 6906 constant uart_rx_busy
 h# 6908 constant uart_tx_init
 h# 690A constant uart_rx_init
 h# 690B constant uart_done
-h# 690C constant uart_stop
 
 \ Mapa de memoria de la RAM.
 h# 7000 constant RAM_write

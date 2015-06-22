@@ -117,19 +117,22 @@ module peripheral_uart_TB;
 			end
 			
 			//--------------------Iniciar escucha.
-			if(i == 11000+fac) begin
+			if(i == 11000) begin
 				addr = 4'hA;	
 				cs = 1;
 				rd = 1;
 				wr = 0;
 			end
 			
-			if(i == 11005+fac) begin
+			if(i == 11005) begin
 				addr = 4'hC;	
 				cs = 1;
 				rd = 0;
 				wr = 0;
+				fac = 2315;
 			end
+			
+			
 			
 			//--------------------Rx 10101110 = AE			
 			if(i == 11520+fac) begin

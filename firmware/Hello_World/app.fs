@@ -56,16 +56,36 @@ variable ant
 	\ d# 3 + div_a !
 ;
 
-: main 	
-	\ d# 2000 count
-	s" AT" type-uart \ h# 00 str-to-RAM
-	\ h# 00 dup load-str type-str-uart
-	h# 0a emit-uart h# 0d emit-uart
+: main
+	s" Inicia" type-uart emit-cmd-end
+	
+	listen-and-save	
+	received-uart dup load-str type-str-uart
+
+	s" Final" type-uart emit-cmd-end
+	(
+	s" AT+CWMODE?" h# 00 str-to-RAM \ h# 00 str-to-RAM
+	h# 00 dup load-str type-str-uart
+	h# 0d emit-uart h# 0a emit-uart
 	
 	d# 1000 count
 	
-	s" AT+CWMODE?" type-uart
-	h# 0a emit-uart h# 0d emit-uart
+	s" AT+CWMODE=1" h# 00 str-to-RAM \ h# 00 str-to-RAM
+	h# 00 dup load-str type-str-uart
+	h# 0d emit-uart h# 0a emit-uart
+	
+	d# 1000 count
+	
+	s" AT+CWMODE?" h# 00 str-to-RAM \ h# 00 str-to-RAM
+	h# 00 dup load-str type-str-uart
+	h# 0d emit-uart h# 0a emit-uart
+	
+	h# 63 emit-uart
+	listen-and-save
+	h# 64 emit-uart
+	h# 64 load-str emit-uart
+	)
+	\ type-str-uart
 	
 	\ listen-and-save
 	\ h# 64 dup load-str type-str-uart
@@ -113,7 +133,6 @@ variable ant
 	)
 	
 	d# 0 begin
-		
 \		d# 5000 count
 	1+ again
 		

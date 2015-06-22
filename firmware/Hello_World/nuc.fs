@@ -469,41 +469,45 @@ h# 64 constant received-uart
 
 \ Emitir un dato por la UART.
 : emit-uart ( dat -- )
-	begin uart_rx_busy @ 0= uart_tx_busy @ 0= and until
+	begin uart_tx_busy @ 0= until
 	uart_write !
 	h# 1 uart_tx_init !
 ;
 
+: show ( dat -- )
+	dup emit-uart
+;
+
+variable time
+
 \ Poner la UART en escucha durante time milisegundos.
-: listen-uart ( time )
+: listen-uart (  )
+	time !
 	begin uart_rx_busy @ 0= uart_tx_busy @ 0= and until
-	
-	h# 1 timer_rst !
+
 	uart_rx_init @ drop
-	
-	begin 
-	timer_cycles @ uart_done @ -rot over	( time cycles done ) ( done time cycles time )
-	> -rot -rot d# 1 = or until ( done time flag1 ) ( flag1 done time ) ( time flag1 done )
-	drop
+	h# 1 timer_rst !
+	begin uart_done @ h# 1 = time get timer_cycles get < or until
 	uart_read @
 ;
 
 variable acc
-
+variable addr_r
 \ Escucha datos de la UART por 1s indefinidamente, se detiene cuando el dato recibido es cero.
 : listen-and-save (  )
 	h# 0 acc !
 \	h# 0 received-uart save-str \ Iniciar longitud en cero.
 	
 	begin
-		received-uart 1+ acc get + \ Corre en counter unidades la posición.		( addr+acc )
-		d# 100 listen-uart																	( addr+acc ou )
-		dup 0= invert if																		( addr+acc ou ou ) ( addr+acc ou )
-			swap over swap save-str															( ou addr+acc ) ( ou addr+acc ou ) ( ou ou addr+acc ) ( ou )
-			acc get 1+ acc !
+		received-uart 1+ acc get + addr_r !						( addr ) ( addr+1 ) ( acc ) ( addr+acc+1 )
+		
+		d# 1000 listen-uart											( ou )
+		dup 0= invert if												( ou ou ) ( ou flag ) ( ou )
+			dup addr_r get save-str									( ou ou addr+1+acc ) ( ou )
+			acc get 1+ acc !											( ou )
 		then
 	0= until ( AÑADIR si counter > 155 desbodamiento )
-	acc get received-uart save-str
+	acc get h# 1 - received-uart save-str
 ;
 
 \ Emitir un string por la UART, emite caracter por caracter.
@@ -530,16 +534,19 @@ variable pos
 	then
 ;
 
+: emit-cmd-end
+	h# 0d emit-uart h# 0a emit-uart
+;
+
 \ Emite un string por la UART añadiendo los saltos 0d y 0a.
 : type-to-ESP ( addr length -- )
 	d# 0 do
 		dup c@ emit-uart
 	1+
 	loop
-	h# 0d emit-uart h# 0a emit-uart
+	emit-cmd-end
 	drop
 ;
-
 
 defer emit
 ' emit-uart is emit

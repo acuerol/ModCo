@@ -26,7 +26,7 @@ module j1soc#(
    wire			[7:0] uart_dout;
    wire			[15:0] ram_dout;
 	wire [15:0]timer_dout;
-	wire [15:0]strRAM_dout;
+	wire [7:0]strRAM_dout;
 	
 	reg csm;
 	reg csd;
@@ -46,7 +46,7 @@ module j1soc#(
 
 	peripheral_div  per_d (.clk(sys_clk_i), .rst(sys_rst_i), .d_in(j1_io_dout), .cs(csd), .addr(j1_io_addr[3:0]), .rd(j1_io_rd), .wr(j1_io_wr), .d_out(div_dout));
 
-	peripheral_uart  per_u (.clk(sys_clk_i), .rst(sys_rst_i), .addr(j1_io_addr[3:0]), .cs(csu), .rd(j1_io_rd), .wr(j1_io_wr), .data_in(j1_io_dout), .uart_tx(uart_tx), .tx_led(tx_led), .data_out(uart_dout), .uart_rx(uart_rx), .rx_led(rx_led));
+	peripheral_uart  per_u (.clk(sys_clk_i), .rst(sys_rst_i), .addr(j1_io_addr[3:0]), .cs(csu), .rd(j1_io_rd), .wr(j1_io_wr), .data_in(j1_io_dout[7:0]), .uart_tx(uart_tx), .tx_led(tx_led), .data_out(uart_dout), .uart_rx(uart_rx), .rx_led(rx_led));
 
 	peripheral_RAM per_RAM(.clk(sys_clk_i), .addr(j1_io_addr[3:0]), .dat_in(j1_io_dout), .dat_out(ram_dout), .cs(csr), .rd(j1_io_rd), .wr(j1_io_wr));
 

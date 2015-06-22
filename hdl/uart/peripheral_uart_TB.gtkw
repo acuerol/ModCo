@@ -1,21 +1,21 @@
 [*]
 [*] GTKWave Analyzer v3.3.58 (w)1999-2014 BSI
-[*] Fri Jun 19 03:37:35 2015
+[*] Mon Jun 22 02:20:32 2015
 [*]
 [dumpfile] "/home/acuerol/Dropbox/universidad/classes/EDI/j1_soc_edit/hdl/uart/simulation/peripheral_uart_TB.vcd"
-[dumpfile_mtime] "Fri Jun 19 03:37:32 2015"
-[dumpfile_size] 3530973
+[dumpfile_mtime] "Mon Jun 22 02:18:29 2015"
+[dumpfile_size] 3531247
 [savefile] "/home/acuerol/Dropbox/universidad/classes/EDI/j1_soc_edit/hdl/uart/peripheral_uart_TB.gtkw"
-[timestart] 217000000
+[timestart] 195700000
 [size] 1366 718
-[pos] 1185 -59
-*-24.000000 251970000 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[pos] -181 -59
+*-25.000000 230430000 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
 [treeopen] peripheral_uart_TB.
 [treeopen] peripheral_uart_TB.p_uart.
 [sst_width] 196
-[signals_width] 213
+[signals_width] 298
 [sst_expanded] 1
-[sst_vpaned_height] 296
+[sst_vpaned_height] 399
 @28
 peripheral_uart_TB.p_uart.clk
 @200
@@ -26,11 +26,14 @@ peripheral_uart_TB.p_uart.rd
 peripheral_uart_TB.p_uart.wr
 @200
 -
+@22
+peripheral_uart_TB.p_uart.sel_mux[3:0]
+@200
+-
 @28
-peripheral_uart_TB.p_uart.uart.sending
-peripheral_uart_TB.p_uart.uart_tx_busy
+peripheral_uart_TB.p_uart.uart.uart_tx_busy
 peripheral_uart_TB.p_uart.uart.clk_div
-peripheral_uart_TB.p_uart.uart.uart_tx
+peripheral_uart_TB.uart_tx
 @22
 peripheral_uart_TB.p_uart.uart_data_in[7:0]
 @200
@@ -39,11 +42,12 @@ peripheral_uart_TB.p_uart.uart_data_in[7:0]
 peripheral_uart_TB.p_uart.uart.receiving
 peripheral_uart_TB.p_uart.uart_rx_busy
 peripheral_uart_TB.p_uart.uart.clk_div
-@29
+peripheral_uart_TB.uart_rx
+@22
 peripheral_uart_TB.p_uart.uart_data_out[7:0]
-@28
-peripheral_uart_TB.p_uart.uart.uart_rx
 @200
 -
+@24
+peripheral_uart_TB.i[20:0]
 [pattern_trace] 1
 [pattern_trace] 0

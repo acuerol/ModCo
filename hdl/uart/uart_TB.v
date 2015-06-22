@@ -26,6 +26,7 @@ module uart_TB;
 	parameter OFFSET = 0;
 	
 	reg [20:0] i;
+	reg [20:0] fac;
 	event reset_trigger;
 		
 	uart uart(.uart_busy(uart_busy), .uart_tx(uart_tx), .uart_dat_o(uart_dat_o), .uart_rx_busy(uart_rx_busy) , .done(done), .uart_wr_i(uart_wr_i), .uart_rd_i(uart_rd_i), .uart_rx(uart_rx), .uart_dat_i(uart_dat_i), .sys_clk_i(sys_clk_i), .sys_rst_i(sys_rst_i));
@@ -38,12 +39,14 @@ module uart_TB;
 		
 		uart_rx = 1;
 		uart_rd_i = 0;
+		
+		fac = 0;
 	end
 
 	
 	
 	initial begin				
-		for(i=0; i<20000; i=i+1) begin
+		for(i=0; i < 20000; i=i+1) begin
 			@ (posedge sys_clk_i);
 			
 			if(i == 10) begin
@@ -74,49 +77,53 @@ module uart_TB;
 				uart_dat_i = 0;
 			end
 			
+			
+			if(i == 10) begin
+				fac = 555;
+			end
 			//--------------------RX 10101110 -170
 			
-			if(i == 11150) begin
+			if(i == 11150+fac) begin
 				uart_rd_i = 1; // inicio de recepción
 			end
 			
-			if(i == 11520) begin
+			if(i == 11520+fac) begin
 				uart_rx = 0; // inicio de recepción
 			end
 			
-			if(i == 11954) begin
+			if(i == 11954+fac) begin
 				uart_rx = 1;
 			end
 			
-			if(i == 12388) begin
+			if(i == 12388+fac) begin
 				uart_rx = 0;
 			end
 			
-			if(i == 12822) begin
+			if(i == 12822+fac) begin
 				uart_rx = 1;
 			end
 			
-			if(i == 13256) begin
+			if(i == 13256+fac) begin
 				uart_rx = 0;
 			end
 			
-			if(i == 13690) begin
+			if(i == 13690+fac) begin
 				uart_rx = 1;
 			end
 			
-			if(i == 14124) begin
+			if(i == 14124+fac) begin
 				uart_rx = 1;
 			end
 			
-			if(i == 14558) begin
+			if(i == 14558+fac) begin
 				uart_rx = 1;
 			end
 			
-			if(i == 14992) begin
+			if(i == 14992+fac) begin
 				uart_rx = 0;
 			end
 			// end
-			if(i == 15426) begin
+			if(i == 15426+fac) begin
 				uart_rx = 1;
 			end
 			//--------------------RX 10101110 -170

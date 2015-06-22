@@ -1,4 +1,4 @@
-module uart(clk, rst, init_tx, init_rx ,uart_data_in, uart_tx, uart_tx_busy, uart_data_out, uart_rx, uart_rx_busy, done, stop);
+module uart(clk, rst, init_tx, init_rx ,uart_data_in, uart_tx, uart_tx_busy, uart_data_out, uart_rx, uart_rx_busy, done);
 
 	//--------------------Entradas
 	input clk;
@@ -9,8 +9,6 @@ module uart(clk, rst, init_tx, init_rx ,uart_data_in, uart_tx, uart_tx_busy, uar
 	
 	input [7:0]uart_data_in;
 	input uart_rx;
-
-	input stop;
 	
 	//--------------------Salidas
 	output reg [7:0]uart_data_out;
@@ -32,7 +30,6 @@ module uart(clk, rst, init_tx, init_rx ,uart_data_in, uart_tx, uart_tx_busy, uar
 	
 	reg uart_tx;
 	wire uart_tx_busy = |bitcount_tx; // invertidos v
-	wire sending = |bitcount_tx[3:1]; // invertidos ^
 
 	reg [8:0]shifter;
 	
@@ -52,7 +49,7 @@ module uart(clk, rst, init_tx, init_rx ,uart_data_in, uart_tx, uart_tx_busy, uar
 		end
 	
 	always @(posedge clk) begin
-		if (rst | stop) begin
+		if (rst) begin
 			uart_tx <= 1;
 			bitcount_tx <= 0;
 			shifter <= 0;
@@ -61,7 +58,7 @@ module uart(clk, rst, init_tx, init_rx ,uart_data_in, uart_tx, uart_tx_busy, uar
 			bitcount_rx <= 0;
 		end else begin
 			//--------------------Tx UART
-			if (~sending & ~receiving & init_tx) begin
+			if (~uart_tx_busy & ~uart_rx_busy & init_tx) begin
 				shifter <= { uart_data_in , 1'h0 }; // Marca el bit de inicio.
 				bitcount_tx <= (1 + 8 + 2); // Para contar 1bit de inicio (low) de transmisión, contar el número de bits a enviar y mantener 2bits en alto para terminar.
 			end
@@ -73,18 +70,20 @@ module uart(clk, rst, init_tx, init_rx ,uart_data_in, uart_tx, uart_tx_busy, uar
 			end
 			
 			//--------------------Rx UART
-			if(~sending & ~receiving & ~uart_rx & init_rx) begin
-				bitcount_rx <= 10;
+			if(init_rx) begin
 				uart_data_out <= 0;
+				if(~uart_tx_busy & ~uart_rx_busy & ~uart_rx) begin
+					bitcount_rx <= 10;
+				end
 			end
 		
 			if(uart_rx_busy & clk_div) begin
 				bitcount_rx <= bitcount_rx - 1;
-				
-				if(receiving) begin
-					uart_data_out <= { uart_rx , uart_data_out[7:1]}; //Revisar, está lleyendo al revés.
-				end
-			end			
+				if(receiving)
+					uart_data_out <= { uart_rx , uart_data_out[7:1]};
+			end
+//			if( ~receiving & uart_rx_busy ) Verificar que le siugiente bit sea 1
+					
 		end
-	end
+	end	
 endmodule
