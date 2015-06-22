@@ -57,80 +57,10 @@ variable ant
 ;
 
 : main
-	s" Inicia" type-uart emit-cmd-end
-	
-	listen-and-save	
-	received-uart dup load-str type-str-uart
+	s" Ini" type-uart emit-cmd-end
 
-	s" Final" type-uart emit-cmd-end
-	(
-	s" AT+CWMODE?" h# 00 str-to-RAM \ h# 00 str-to-RAM
-	h# 00 dup load-str type-str-uart
-	h# 0d emit-uart h# 0a emit-uart
 	
-	d# 1000 count
-	
-	s" AT+CWMODE=1" h# 00 str-to-RAM \ h# 00 str-to-RAM
-	h# 00 dup load-str type-str-uart
-	h# 0d emit-uart h# 0a emit-uart
-	
-	d# 1000 count
-	
-	s" AT+CWMODE?" h# 00 str-to-RAM \ h# 00 str-to-RAM
-	h# 00 dup load-str type-str-uart
-	h# 0d emit-uart h# 0a emit-uart
-	
-	h# 63 emit-uart
-	listen-and-save
-	h# 64 emit-uart
-	h# 64 load-str emit-uart
-	)
-	\ type-str-uart
-	
-	\ listen-and-save
-	\ h# 64 dup load-str type-str-uart
-	
-\	h# 00 dup load-str h# CC dup load-str contains emit-uart
-	
-\	s" Hola Mundo" h# 00 str-to-RAM
-	
-\	h# AA h# 05 h# 3 substring
-\	h# AA dup load-str type-str-uart
-	
-\	h# 6F h# 00 last-index emit-uart
-	
-	(
-	s" Hola Mundoi" h# 00 str-to-RAM
-	s" Hola Mundo" h# CC str-to-RAM
-	
-	h# 00 dup load-str h# CC dup load-str compare emit-uart
-	)
-
-\	h# 5 char-at emit-uart
-	
-\ 	h# 61 h# CC first-index emit-uart
-	 
-\	s" Hola Mundo" h# 00 str-to-RAM
-\	s" Prueba concat" h# AA str-to-RAM
-	
-\	h# 00 dup load-str h# AA dup load-str concat
-	
-\	h# 00 load-str
-	
-\	h# 74 h# 00 first-index emit-uart
-	
-\	d# 8 h# 00 char-at emit-uart
-	
-	
-	
-	\ h# 61 first-index emit-uart
-	
-	(
-	s" AT+CWMODE?"
-	over h# 4 + c@ emit-uart
-	
-	type-to-ESP
-	)
+	s" Fin" type-uart emit-cmd-end
 	
 	d# 0 begin
 \		d# 5000 count

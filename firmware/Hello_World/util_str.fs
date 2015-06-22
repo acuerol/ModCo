@@ -45,10 +45,11 @@ variable c
 	load-str
 ;
 
+\ Compara caracter por caracter dos strings.
 : compare ( addr1 length1 addr2 length2 )
 	length2 ! addr2 ! length ! addr ! h# 1 flag ! h# 1 pos !
 	
-	length2 get load-str length get load-str = if
+	length2 get length get = if
 		begin
 			addr get pos get + load-str addr2 get pos get + load-str = if
 				h# 1 flag !
@@ -69,44 +70,64 @@ variable c
 	h# 1 pos !
 	length2 ! addr2 ! over over length ! addr ! + addr_temp ! ( addr1 length1 addr2 length2 ) ( addr1 length1 addr1 length1 ) ( addr1+length1 )
 	
-	addr2 get h# FE save-str
-	
 	begin
-		addr_temp get pos get swap over + swap addr2 get + load-str swap save-str	
+		addr_temp get pos get swap over + swap addr2 get + load-str swap save-str	( addr_temp pos ) ( pos addr_temp pos ) ( pos addr_temp+pos )
+													( addr_temp+pos c{pos+addr2} ) ( c{pos+addr2} addr_temp+pos )
 		pos get 1+ pos !
 	pos get length get length2 get + > until
-	pos get addr get save-str
+	pos get 1- addr get save-str
 ;
 
-
-
-\ Busca el string que comienza en addr en el string que empieza en addr2.
+\ Busca el string que comienza en addr en el string que empieza en addr2, 0 no contiene 1 contiene.
 : contains ( addr length addr2 length2 -- )
-	length2 ! addr2 ! length ! addr ! h# 2 flag ! h# 1 pos ! h# 1 pos_temp !
+	length2 ! 1+ addr2 ! length ! 1+ addr !
+	h# 2 flag ! h# 0 pos ! h# 0 pos_temp !
 	
-	length get length2 get < if
+	length get length2 get 
+	< if
 		begin
-			addr2 get pos get + load-str addr get pos_temp get + load-str = if
+			addr2 get pos get + load-str 
+			addr get pos_temp get + load-str 
+			= if
+			
+				pos 1+ get length2 get 
+				= if \ Si supera la longitud de la cadena donde se busca.
+					h# 0 flag !
+				then
+				
+				pos_temp 1+ get length get 
+				= if \ Si supera la longitud de la cadena buscada.
+					h# 1 flag !
+				then
+				
 				pos get 1+ pos !
 				pos_temp get 1+ pos_temp !
 				
-				length2 get pos get < if \ Si supera la longitud de la cadena donde se busca.
-					h# 0 flag !
-					length get pos_temp get < if \ Si supera la longitud de la cadena buscada.
-						h# 1 flag !
-					then
-				else
-					length get pos_temp get < if \ Si supera la longitud de la cadena buscada.
-						h# 1 flag !
-					then			
-				then
 			else
+				
+				pos 1+ get length2 get 
+				= if \ Si supera la longitud de la cadena donde se busca.
+					h# 0 flag !
+				then
+			
 				pos get 1+ pos !
-				h# 1 pos_temp !
+				h# 0 pos_temp !
 			then
-		flag get 0= flag get h# 1 = or until
+			
+			pos get length2 get 
+				= if \ Si supera la longitud de la cadena donde se busca.
+					h# 0 flag !
+				then
+				
+				pos_temp get length get 
+				= if \ Si supera la longitud de la cadena buscada.
+					h# 1 flag !
+				then
+			
+		flag get dup 0= swap h# 1 = or until 	( flag flag ) ( flag f ) ( f flag 1 ) ( f f2 )
 	else
-		length get length2 get = if
+		length get length2 get 
+		= if
 			addr get length get addr2 get length2 get compare flag !
 		else
 			h# 0 flag ! \ Si la cadena buscada es más grande.
@@ -116,11 +137,11 @@ variable c
 	flag get
 ;
 
-\ Almacena en el stack la primera posición en la que se encuentra el caracter c dentro de la cadena con inicio en addr
+\ Almacena en el stack la primera posición en la que se encuentra el caracter c dentro de la cadena con inicio en addr. (Se cuenta desde 0)
 : first-index ( c addr )
-	dup 1+ addr ! load-str length ! c !
+	dup 1+ addr ! load-str length ! c ! ( c addr ) ( c addr addr ) ( c addr addr+1 ) ( c addr ) ( c )
 	
-	d# 1 flag !
+	h# 1 flag !
 	h# 0 pos !
 	
 	begin
@@ -140,8 +161,8 @@ variable c
 ;
 
 : last-index ( c addr )
-	dup addr ! load-str length ! c !
-	d# 1 flag !	h# 1 pos ! h# FF pos_temp !
+	dup 1+ addr ! load-str length ! c !					( c addr )
+	h# 0 pos ! h# FF pos_temp !
 	
 	begin
 		pos get addr get + load-str					( pos+addr ) ( c{pos+addr} )
@@ -152,16 +173,17 @@ variable c
 			pos get 1+ pos !								( pos 1 ) ( pos+1 )
 		then
 	pos get length get > until
-	
 	pos_temp get
 ;
 
-\ Extrae un substring de longitud length de addr2 y lo guarda en addr1
-: substring ( addr1 addr2 length -- )
-	length ! addr2 ! addr ! h# 0 pos !
+\ Extrae un string de longitud length de addr2 y lo guarda en addr1.
+: substring ( addr1 addr2 length addr_start -- )
+	addr_start ! length ! addr2 ! addr ! h# 0 pos !
 	
 	begin
-		addr2 get pos get + load-str addr get pos get + save-str
+		addr2 get pos get + load-str \ Cargo string de la dirección de extracción.
+		addr get pos get + save-str \ Guardo string de la dirección de extracción en lan nueva posición.
 		pos get 1+ pos !
 	pos get length get > until
+	pos get addr_start get load-str + addr_start get save-str
 ;
